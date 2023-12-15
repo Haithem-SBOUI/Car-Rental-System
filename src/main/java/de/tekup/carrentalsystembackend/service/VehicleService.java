@@ -1,6 +1,7 @@
 package de.tekup.carrentalsystembackend.service;
 
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
+import de.tekup.carrentalsystembackend.model.CarBrand;
 import de.tekup.carrentalsystembackend.model.User;
 import de.tekup.carrentalsystembackend.model.Vehicle;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
@@ -9,9 +10,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class VehicleService {
@@ -43,15 +43,36 @@ public class VehicleService {
 
     private Vehicle convertDtoToInstance(VehicleDto vehicleDto) {
         Vehicle vehicle= new Vehicle();
-        vehicle.setModel(vehicleDto.getModel());
+
         vehicle.setLicensePlateNumber(vehicleDto.getLicensePlateNumber());
-        vehicle.setPricePerDay(vehicleDto.getPricePerDay());
+        vehicle.setBrand(vehicleDto.getBrand());
+        vehicle.setModel(vehicleDto.getModel());
+        vehicle.setLaunchYear(vehicleDto.getLaunchYear());
+        vehicle.setColor(vehicleDto.getColor());
+        vehicle.setMileage(vehicleDto.getMileage());
         vehicle.setFuel(vehicleDto.getFuel());
+        vehicle.setTransmissionType(vehicleDto.getTransmissionType());
+        vehicle.setHp(vehicleDto.getHp());
+        vehicle.setPricePerDay(vehicleDto.getPricePerDay());
+        vehicle.setLastMaintenanceDate(vehicleDto.getLastMaintenanceDate());
         vehicle.setIsAvailable(vehicleDto.getIsAvailable());
+
         return vehicle;
     }
 
     public List<Vehicle> getAllVehicle() {
         return vehicleRepository.findAll();
+    }
+
+    public Optional<List<Vehicle>> findAllByBrand(CarBrand brand) {
+        return vehicleRepository.findAllByBrand(brand);
+    }
+
+    public Optional<List<Vehicle>> findAllByBrandAndModel(CarBrand brand, String model) {
+        return vehicleRepository.findAllByBrandAndModel(brand, model);
+    }
+
+    public Optional<List<Vehicle>> findAllByFuel(String fuel) {
+        return vehicleRepository.findAllByFuel(fuel);
     }
 }

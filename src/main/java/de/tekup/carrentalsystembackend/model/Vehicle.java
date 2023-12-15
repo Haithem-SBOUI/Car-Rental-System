@@ -1,7 +1,10 @@
 package de.tekup.carrentalsystembackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "vehicle")
@@ -16,21 +19,48 @@ public class Vehicle {
     @Column(nullable = false)
     private Long idVehicle;
 
-    private String model;
-
+    @Column(name = "license_plate_number", unique = true)
     private String licensePlateNumber;
 
-    private int pricePerDay;
+    // ?Vehicle Details
+    @Column(length = 50, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CarBrand brand;
 
-    private String fuel;
+    private String model;
+
+    @Column(name = "launch_year")
+    private int launchYear;
+
+    private String color;
+
+    private long mileage;
+
+    // ?Technical Specifications
+    private String fuel; //Gasoline (Petrol), Diesel, Electric
+
+    @Column(name = "transmission_type")
+    private String transmissionType;
+
+    @Column(name = "hp")
+    private int hp; //horsePower | nbdalouha b gadech men cylindre wala ...
+
+    @Column(name = "price_per_day")
+    private int pricePerDay;
 
     private Boolean isAvailable;
 
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    private Assurance assurance;
+    private Insurance insurance;
+
+
+    @Column(name = "last_maintenance_date")
+    private LocalDate lastMaintenanceDate;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
 }

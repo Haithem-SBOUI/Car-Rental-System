@@ -1,6 +1,6 @@
 package de.tekup.carrentalsystembackend.model;
 
 public enum UserRole {
-    ADMIN,
-    USER
+    ROLE_ADMIN,
+    ROLE_USER
 }
