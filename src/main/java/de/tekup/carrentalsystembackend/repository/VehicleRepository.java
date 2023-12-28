@@ -16,4 +16,14 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     Optional<List<Vehicle>> findAllByBrandAndModel(CarBrand brand, String model);
 
     Optional<List<Vehicle>> findAllByFuel(String fuel);
+
+    //Optional<List<Vehicle>> findAllByTransType(String transmissionType);
+
+    Optional<List<Vehicle>> findAllByHorsPower(int horsPower );
+
+    Optional<List<Vehicle>> findAllByPricePerDay(int pricePerDay);
+
+    Optional<List<Vehicle>> findAllByIsAvailable(boolean isAvailable);
+
+    Optional<List<Vehicle>> findAllByTransmissionType(String transmissionType);
 }

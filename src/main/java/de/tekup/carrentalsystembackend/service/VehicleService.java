@@ -41,6 +41,17 @@ public class VehicleService {
 
     }
 
+    public Vehicle getVehicleById(Long id)
+    {
+        return vehicleRepository.findById(id).get();
+    }
+
+    public Vehicle updateVehicle(Vehicle vehicle)
+    {
+        return vehicleRepository.saveAndFlush(vehicle);
+    }
+
+
     private Vehicle convertDtoToInstance(VehicleDto vehicleDto) {
         Vehicle vehicle= new Vehicle();
 
@@ -52,13 +63,14 @@ public class VehicleService {
         vehicle.setMileage(vehicleDto.getMileage());
         vehicle.setFuel(vehicleDto.getFuel());
         vehicle.setTransmissionType(vehicleDto.getTransmissionType());
-        vehicle.setHp(vehicleDto.getHp());
+        vehicle.setHorsPower(vehicleDto.getHorsPower());
         vehicle.setPricePerDay(vehicleDto.getPricePerDay());
-        vehicle.setLastMaintenanceDate(vehicleDto.getLastMaintenanceDate());
+        vehicle.setLastMaintenanceMileage(vehicleDto.getLastMaintenanceMileage());
         vehicle.setIsAvailable(vehicleDto.getIsAvailable());
 
         return vehicle;
     }
+
 
     public List<Vehicle> getAllVehicle() {
         return vehicleRepository.findAll();
@@ -75,4 +87,24 @@ public class VehicleService {
     public Optional<List<Vehicle>> findAllByFuel(String fuel) {
         return vehicleRepository.findAllByFuel(fuel);
     }
+
+
+
+    public Optional<List<Vehicle>> findAllByTransType(String transmissionType) {
+        return vehicleRepository.findAllByTransmissionType(transmissionType);
+    }
+
+    public Optional<List<Vehicle>> findAllByHorsPower(int horsPower) {
+        return vehicleRepository.findAllByHorsPower(horsPower);
+    }
+
+    public Optional<List<Vehicle>> findAllByPrice(int pricePerDay) {
+        return vehicleRepository.findAllByPricePerDay(pricePerDay);
+    }
+
+    public Optional<List<Vehicle>> findAllByAvailability(boolean isAvailable) {
+        return  vehicleRepository.findAllByIsAvailable(isAvailable);
+    }
+
+
 }

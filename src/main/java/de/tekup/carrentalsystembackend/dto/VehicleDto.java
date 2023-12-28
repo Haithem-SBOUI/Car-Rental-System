@@ -25,11 +25,11 @@ public class VehicleDto {
 
     private String transmissionType;
 
-    private int hp; //horsePower | nbdalouha b gadech men cylindre wala ...
+    private int horsPower; //horsePower | nbdalouha b gadech men cylindre wala ...
 
     private int pricePerDay;
 
-    private LocalDate lastMaintenanceDate;
+    private int lastMaintenanceMileage;
 
     private Boolean isAvailable;
 
