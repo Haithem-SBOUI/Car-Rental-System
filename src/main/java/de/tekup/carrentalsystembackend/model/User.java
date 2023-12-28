@@ -31,7 +31,7 @@ public class User {
     @Column(length = 100, unique = true, nullable = false)
     private String email;
 
-    @Column(length = 255, nullable = false)
+    @Column(length = 10, nullable = false)
     private String password;
 
     //    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'https://www.freeiconspng.com/uploads/profile-icon-28.png'")

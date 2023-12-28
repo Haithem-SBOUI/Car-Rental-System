@@ -42,8 +42,9 @@ public class Vehicle {
     @Column(name = "transmission_type")
     private String transmissionType;
 
-    @Column(name = "hp")
-    private int hp; //horsePower | nbdalouha b gadech men cylindre wala ...
+    @Column(name = "horse_power")
+    private int horsPower; //horsePower
+
 
     @Column(name = "price_per_day")
     private int pricePerDay;
@@ -54,8 +55,8 @@ public class Vehicle {
     private Insurance insurance;
 
 
-    @Column(name = "last_maintenance_date")
-    private LocalDate lastMaintenanceDate;
+    @Column(name = "last_maintenance_mileage")
+    private int lastMaintenanceMileage;
 
 
     @ManyToOne
