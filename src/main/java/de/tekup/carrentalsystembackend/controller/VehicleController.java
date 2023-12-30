@@ -3,9 +3,7 @@ package de.tekup.carrentalsystembackend.controller;
 
 import de.tekup.carrentalsystembackend.dto.LoginDto;
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
-import de.tekup.carrentalsystembackend.model.CarBrand;
-import de.tekup.carrentalsystembackend.model.User;
-import de.tekup.carrentalsystembackend.model.Vehicle;
+import de.tekup.carrentalsystembackend.model.*;
 import de.tekup.carrentalsystembackend.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
@@ -14,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +34,10 @@ public class VehicleController {
         } catch (EntityNotFoundException e) {
             // exception if the email or username already exists
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found!");
+
+       /* } catch (AccessDeniedException e) {
+
+            return ResponseEntity.status(403).body(e.getMessage());*/
         } catch (Exception e) {
             // any other exceptions
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Verify The User Data");
@@ -76,9 +79,9 @@ public class VehicleController {
         }
     }
 
-    //    todo: findAllByFuel
+    //    todo: findAllByFuel Should make Enum for Gasoline Diesel Elecetric
     @GetMapping("/get-all-vehicle-by-fuel/{fuel}")
-    public ResponseEntity<?> findAllByFuel(@PathVariable String fuel) {
+    public ResponseEntity<?> findAllByFuel(@PathVariable FuelType fuel) {
         Optional<List<Vehicle>> vehicles = vehicleService.findAllByFuel(fuel);
         if (vehicles.isPresent() && !vehicles.get().isEmpty()) {
             return ResponseEntity.ok().body(vehicles);
@@ -88,11 +91,11 @@ public class VehicleController {
     }
 
 
-    //    todo: findAllHorsPower
-    @GetMapping("/get-all-vehicle-by-horsepower/{hors_power}")
-    public ResponseEntity<?> findAllByHorsPower(@PathVariable int hors_power)
+    //    todo: findAllHorsPower should be in range between {100 .. 500}
+    @GetMapping("/get-all-vehicle-by-horsepower/{minhorsePower}to{maxhorsepower}")
+    public ResponseEntity<?> findAllByHorsPower(@PathVariable int minhorsePower , @PathVariable int maxhorsepower )
     {
-        Optional<List<Vehicle>> vehicles = vehicleService.findAllByHorsPower( hors_power);
+        Optional<List<Vehicle>> vehicles = vehicleService.findAllByHorsPower( minhorsePower ,  maxhorsepower);
         if(vehicles.isPresent() && !vehicles.get().isEmpty())
         {
             return  ResponseEntity.ok().body(vehicles);
@@ -101,27 +104,26 @@ public class VehicleController {
         }
     }
 
-    //    todo: findAllByTransmissionType
+    //    todo: findAllByTransmissionType should be Manual or Automatic
     @GetMapping("/get-all-vehicle-by-transmission/{transmission_type}")
-     public ResponseEntity<?> findAllByTransType(@PathVariable String transmission_type)
+     public ResponseEntity<?> findAllByTransType(@PathVariable TransmType TransmissionType)
      {
-         Optional<List<Vehicle>> vehicles = vehicleService.findAllByTransType(transmission_type);
+         Optional<List<Vehicle>> vehicles = vehicleService.findAllByTransType(TransmissionType);
          if (vehicles.isPresent() && !vehicles.get().isEmpty())
          {
              return ResponseEntity.ok().body(vehicles);
          }else {
              return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
          }
-
      }
 
 
 
 //    todo: findAllByPriceRange
-    @GetMapping("/get-all-vehicle-by-price/{price_per_day}")
-    public ResponseEntity<?> findAllByPrice(@PathVariable int price_per_day )
+    @GetMapping("/get-all-vehicle-by-price/{min_price_per_day}to{max_price_per_day}")
+    public ResponseEntity<?> findAllByPrice(@PathVariable int min_price_per_day ,@PathVariable int max_price_per_day)
     {
-        Optional<List<Vehicle>> vehicles = vehicleService.findAllByPrice(price_per_day);
+        Optional<List<Vehicle>> vehicles = vehicleService.findAllByPrice(min_price_per_day,max_price_per_day );
         if(vehicles.isPresent() && !vehicles.get().isEmpty())
         {
             return ResponseEntity.ok().body(vehicles);

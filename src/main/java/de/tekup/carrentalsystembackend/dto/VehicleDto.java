@@ -1,6 +1,9 @@
 package de.tekup.carrentalsystembackend.dto;
 
 import de.tekup.carrentalsystembackend.model.CarBrand;
+import de.tekup.carrentalsystembackend.model.FuelType;
+import de.tekup.carrentalsystembackend.model.TransmType;
+//import de.tekup.carrentalsystembackend.model.TransmissionType;
 import jakarta.persistence.Column;
 import lombok.Data;
 
@@ -21,11 +24,11 @@ public class VehicleDto {
 
     private long mileage;
 
-    private String fuel; //Gasoline (Petrol), Diesel, Electric
+    private FuelType fuel; //Gasoline (Petrol), Diesel, Electric
 
-    private String transmissionType;
+    private TransmType transmissionType;
 
-    private int horsPower; //horsePower | nbdalouha b gadech men cylindre wala ...
+    private int horsPower; //horsePower |
 
     private int pricePerDay;
 
