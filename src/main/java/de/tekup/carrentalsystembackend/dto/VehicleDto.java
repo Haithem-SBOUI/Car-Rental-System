@@ -3,8 +3,7 @@ package de.tekup.carrentalsystembackend.dto;
 import de.tekup.carrentalsystembackend.model.CarBrand;
 import de.tekup.carrentalsystembackend.model.FuelType;
 import de.tekup.carrentalsystembackend.model.TransmType;
-//import de.tekup.carrentalsystembackend.model.TransmissionType;
-import jakarta.persistence.Column;
+
 import lombok.Data;
 
 import java.time.LocalDate;

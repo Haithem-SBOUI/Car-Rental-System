@@ -93,89 +93,82 @@ public class VehicleController {
 
     //    todo: findAllHorsPower should be in range between {100 .. 500}
     @GetMapping("/get-all-vehicle-by-horsepower/{minhorsePower}to{maxhorsepower}")
-    public ResponseEntity<?> findAllByHorsPower(@PathVariable int minhorsePower , @PathVariable int maxhorsepower )
-    {
-        Optional<List<Vehicle>> vehicles = vehicleService.findAllByHorsPower( minhorsePower ,  maxhorsepower);
-        if(vehicles.isPresent() && !vehicles.get().isEmpty())
+    public ResponseEntity<?> findAllByHorsPower(@PathVariable int minhorsePower, @PathVariable int maxhorsepower) {
+
+        try {
+            List<Vehicle> vehicles = vehicleService.findAllByHorsPower(minhorsePower, maxhorsepower).get();
+            if (vehicles.isEmpty()) {
+                return new ResponseEntity<List<Vehicle>>(HttpStatus.NO_CONTENT);
+            }
+            return  ResponseEntity.ok(vehicles);
+
+        }catch (Exception e)
         {
-            return  ResponseEntity.ok().body(vehicles);
+          return new ResponseEntity<List<Vehicle>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //    todo: findAllByTransmissionType should be Manual or Automatic
+    @GetMapping("/get-all-vehicle-by-transmission/{transmissionType}")
+    public ResponseEntity<?> findAllByTransType(@PathVariable TransmType transmissionType) {
+        Optional<List<Vehicle>> vehicles = vehicleService.findAllByTransType(transmissionType);
+        if (vehicles.isPresent() && !vehicles.get().isEmpty()) {
+            return ResponseEntity.ok().body(vehicles);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    //    todo: findAllByTransmissionType should be Manual or Automatic
-    @GetMapping("/get-all-vehicle-by-transmission/{transmission_type}")
-     public ResponseEntity<?> findAllByTransType(@PathVariable TransmType TransmissionType)
-     {
-         Optional<List<Vehicle>> vehicles = vehicleService.findAllByTransType(TransmissionType);
-         if (vehicles.isPresent() && !vehicles.get().isEmpty())
-         {
-             return ResponseEntity.ok().body(vehicles);
-         }else {
-             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-         }
-     }
 
-
-
-//    todo: findAllByPriceRange
+    //    todo: findAllByPriceRange
     @GetMapping("/get-all-vehicle-by-price/{min_price_per_day}to{max_price_per_day}")
-    public ResponseEntity<?> findAllByPrice(@PathVariable int min_price_per_day ,@PathVariable int max_price_per_day)
-    {
-        Optional<List<Vehicle>> vehicles = vehicleService.findAllByPrice(min_price_per_day,max_price_per_day );
-        if(vehicles.isPresent() && !vehicles.get().isEmpty())
-        {
+    public ResponseEntity<?> findAllByPrice(@PathVariable int min_price_per_day, @PathVariable int max_price_per_day) {
+        Optional<List<Vehicle>> vehicles = vehicleService.findAllByPrice(min_price_per_day, max_price_per_day);
+        if (vehicles.isPresent() && !vehicles.get().isEmpty()) {
             return ResponseEntity.ok().body(vehicles);
-        } else
-        {
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-//    todo: findAllByAvailability
+
+    //    todo: findAllByAvailability
     @GetMapping("/get-all-vehicle-by-avaibility/{is_available}")
-    public ResponseEntity<?> findAllByAvailability(@PathVariable boolean is_available){
+    public ResponseEntity<?> findAllByAvailability(@PathVariable boolean is_available) {
         Optional<List<Vehicle>> vehicles = vehicleService.findAllByAvailability(is_available);
-        if(vehicles.isPresent() && !vehicles.get().isEmpty())
-        {
+        if (vehicles.isPresent() && !vehicles.get().isEmpty()) {
             return ResponseEntity.ok().body(vehicles);
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     //Update Vehicle by Id
     @PutMapping("/updateVehicle/{id}")
-    public Vehicle updateVehicle(@PathVariable Long idVehicle , @RequestBody Vehicle vehicle)
-    {
-          Vehicle v1 = vehicleService.getVehicleById(idVehicle);
-          if(v1!= null){
-              vehicle.setIdVehicle(idVehicle);
-              return vehicleService.updateVehicle(vehicle);
-          } else {
-              throw new RuntimeException("Fail update vehicle not found !!");
-          }
+    public Vehicle updateVehicle(@PathVariable Long idVehicle, @RequestBody Vehicle vehicle) {
+        Vehicle v1 = vehicleService.getVehicleById(idVehicle);
+        if (v1 != null) {
+            vehicle.setIdVehicle(idVehicle);
+            return vehicleService.updateVehicle(vehicle);
+        } else {
+            throw new RuntimeException("Fail update vehicle not found !!");
+        }
     }
 
     //Delete Vehicle By Id
     @DeleteMapping("/deleteVehicle/{id}")
-    public HashMap<String , String> deleteVehicle(@PathVariable Long id)
-    {
-        HashMap<String , String> deletStat = new HashMap<>();
-        if(vehicleService.getVehicleById(id) == null)
-        {
-            deletStat.put("Status -->"," Error Vehicle Not Found !!!!");
+    public HashMap<String, String> deleteVehicle(@PathVariable Long id) {
+        HashMap<String, String> deletStat = new HashMap<>();
+        if (vehicleService.getVehicleById(id) == null) {
+            deletStat.put("Status -->", " Error Vehicle Not Found !!!!");
 
-            return  deletStat;
+            return deletStat;
         }
         try {
             vehicleService.getVehicleById(id);
-            deletStat.put("Status -->","Successfully Deleting");
+            deletStat.put("Status -->", "Successfully Deleting");
             return deletStat;
-        }
-        catch (Exception e)
-        {
-            deletStat.put("Status -->"," Error Vehicle Not deleted");
+        } catch (Exception e) {
+            deletStat.put("Status -->", " Error Vehicle Not deleted");
             return deletStat;
         }
     }
