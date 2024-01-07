@@ -4,11 +4,14 @@ import de.tekup.carrentalsystembackend.dto.RegisterDto;
 import de.tekup.carrentalsystembackend.model.User;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.ValidationException;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -51,5 +54,10 @@ public class UserService {
 
     public User findUserById(Long id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    public List<User> getAllUsers()
+    {
+        return userRepository.findAll();
     }
 }

@@ -3,6 +3,8 @@ package de.tekup.carrentalsystembackend.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "insurance")
 @Getter
@@ -21,4 +23,16 @@ public class Insurance {
     @JoinColumn(name = "id_vehicle")
     private Vehicle vehicle;
 
+    @Column(nullable = false)
+    private Date startDate;
+
+    @Column(nullable = false)
+    private  Date endDate;
+    @Column(nullable = false)
+    private int price;
+
+
+
+
 }
+

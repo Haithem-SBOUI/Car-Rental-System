@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
+
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("localhost:4200")
@@ -29,5 +32,11 @@ public class UserController {
     @GetMapping("/find_by_id/{id}")
     public User findUserById(@PathVariable Long id) {
         return userService.findUserById(id);
+    }
+
+   @GetMapping("/all_users")
+    public List<User> getAllUsers()
+    {
+        return userService.getAllUsers();
     }
 }

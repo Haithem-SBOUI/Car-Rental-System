@@ -1,7 +1,9 @@
 package de.tekup.carrentalsystembackend.dto;
 
 import de.tekup.carrentalsystembackend.model.CarBrand;
-import jakarta.persistence.Column;
+import de.tekup.carrentalsystembackend.model.FuelType;
+import de.tekup.carrentalsystembackend.model.TransmType;
+
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -21,15 +23,15 @@ public class VehicleDto {
 
     private long mileage;
 
-    private String fuel; //Gasoline (Petrol), Diesel, Electric
+    private FuelType fuel; //Gasoline (Petrol), Diesel, Electric
 
-    private String transmissionType;
+    private TransmType transmissionType;
 
-    private int hp; //horsePower | nbdalouha b gadech men cylindre wala ...
+    private int horsPower; //horsePower |
 
     private int pricePerDay;
 
-    private LocalDate lastMaintenanceDate;
+    private int lastMaintenanceMileage;
 
     private Boolean isAvailable;
 

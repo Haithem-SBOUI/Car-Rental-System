@@ -1,6 +1,9 @@
 package de.tekup.carrentalsystembackend.repository;
 
 import de.tekup.carrentalsystembackend.model.CarBrand;
+import de.tekup.carrentalsystembackend.model.FuelType;
+import de.tekup.carrentalsystembackend.model.TransmType;
+import de.tekup.carrentalsystembackend.model.TransmType;
 import de.tekup.carrentalsystembackend.model.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,5 +18,15 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     Optional<List<Vehicle>> findAllByBrandAndModel(CarBrand brand, String model);
 
-    Optional<List<Vehicle>> findAllByFuel(String fuel);
+    Optional<List<Vehicle>> findAllByFuel(FuelType fuel);
+
+    //Optional<List<Vehicle>> findAllByTransType(String transmissionType);
+
+    Optional<List<Vehicle>> findAllByHorsPowerBetween(int min, int max);
+
+    Optional<List<Vehicle>> findAllByPricePerDayBetween(int min , int max);
+
+    Optional<List<Vehicle>> findAllByIsAvailable(boolean isAvailable);
+
+    Optional<List<Vehicle>> findAllByTransmissionType(TransmType transmissionType);
 }

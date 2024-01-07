@@ -37,10 +37,12 @@ public class Vehicle {
     private long mileage;
 
     // ?Technical Specifications
-    private String fuel; //Gasoline (Petrol), Diesel, Electric
+    @Enumerated(EnumType.STRING)
+    private FuelType fuel; //Gasoline (Petrol), Diesel, Electric
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "transmission_type")
-    private String transmissionType;
+    private TransmType transmissionType; // Automatic , Manual
 
     @Column(name = "horse_power")
     private int horsPower; //horsePower
