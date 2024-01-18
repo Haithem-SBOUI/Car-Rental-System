@@ -41,7 +41,7 @@ public class Vehicle {
     private FuelType fuel; //Gasoline (Petrol), Diesel, Electric
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "transmission_type")
+    @Column(name = "transmission _type")
     private TransmType transmissionType; // Automatic , Manual
 
     @Column(name = "horse_power")

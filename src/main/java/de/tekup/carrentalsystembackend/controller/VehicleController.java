@@ -1,25 +1,22 @@
 package de.tekup.carrentalsystembackend.controller;
 
 
-import de.tekup.carrentalsystembackend.dto.LoginDto;
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
 import de.tekup.carrentalsystembackend.model.*;
 import de.tekup.carrentalsystembackend.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
-@CrossOrigin("localhost:4200")
+@RequestMapping("/api/v1/vehicle")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class VehicleController {
 
     @Autowired

@@ -1,10 +1,11 @@
 package de.tekup.carrentalsystembackend.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class LoginDto {
+@Builder
+public class AuthRequestDto {
     private String email;
     private String password;
-
 }

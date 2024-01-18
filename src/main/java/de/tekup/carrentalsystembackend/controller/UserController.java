@@ -1,5 +1,6 @@
 package de.tekup.carrentalsystembackend.controller;
 
+import de.tekup.carrentalsystembackend.dto.AuthRequestDto;
 import de.tekup.carrentalsystembackend.dto.RegisterDto;
 import de.tekup.carrentalsystembackend.model.User;
 import de.tekup.carrentalsystembackend.service.UserService;
@@ -13,11 +14,17 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/user")
-@CrossOrigin("localhost:4200")
+@RequestMapping("/api/v1/user")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class UserController {
     @Autowired
     private UserService userService;
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequestDto authRequest) {
+        return userService.login(authRequest);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
@@ -25,7 +32,7 @@ public class UserController {
             User user = userService.register(registerDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         }
     }
 
