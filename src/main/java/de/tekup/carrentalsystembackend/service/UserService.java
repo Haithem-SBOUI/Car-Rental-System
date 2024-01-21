@@ -29,7 +29,7 @@ public class UserService {
         Optional<User> user = userRepository.findByEmail(authRequest.getEmail());
         if (user.isPresent()) {
             if (authRequest.getPassword().equals(user.get().getPassword())) {
-                Long id = user.get().getUserId();
+                Long id = user.get().getId();
                 String email = user.get().getEmail();
                 String username = user.get().getUsername();
                 userRepository.save(user.get());

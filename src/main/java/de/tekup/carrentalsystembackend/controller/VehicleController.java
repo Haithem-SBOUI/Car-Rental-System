@@ -52,6 +52,14 @@ public class VehicleController {
         return vehicleService.getAllVehicle();
     }
 
+    @GetMapping("/find-all-free-vehicle-by-date-time")
+    public Optional<List<Vehicle>> findAllFreeVehicleByDateTime(@RequestParam String startDate) {
+        System.out.println(startDate);
+        System.out.println("hey");
+        return vehicleService.findAllFreeVehicleByDateTime(startDate);
+
+    }
+
     //    todo: filter methods:
 //    todo: findAllByBrand
     @GetMapping("/get-all-vehicle-by-brand/{brand}")
@@ -141,10 +149,10 @@ public class VehicleController {
 
     //Update Vehicle by Id
     @PutMapping("/updateVehicle/{id}")
-    public Vehicle updateVehicle(@PathVariable Long idVehicle, @RequestBody Vehicle vehicle) {
-        Vehicle v1 = vehicleService.getVehicleById(idVehicle);
+    public Vehicle updateVehicle(@PathVariable Long id, @RequestBody Vehicle vehicle) {
+        Vehicle v1 = vehicleService.getVehicleById(id);
         if (v1 != null) {
-            vehicle.setIdVehicle(idVehicle);
+            vehicle.setId(id);
             return vehicleService.updateVehicle(vehicle);
         } else {
             throw new RuntimeException("Fail update vehicle not found !!");

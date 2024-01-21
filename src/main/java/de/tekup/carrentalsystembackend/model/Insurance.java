@@ -15,12 +15,10 @@ import java.util.Date;
 public class Insurance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long idInsurance;
+    private Long id;
 
 
     @OneToOne( optional = false)
-    @JoinColumn(name = "id_vehicle")
     private Vehicle vehicle;
 
     @Column(nullable = false)

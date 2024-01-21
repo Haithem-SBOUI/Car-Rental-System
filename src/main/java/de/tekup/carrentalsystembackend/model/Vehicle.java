@@ -1,10 +1,16 @@
 package de.tekup.carrentalsystembackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "vehicle")
@@ -16,8 +22,7 @@ import java.time.LocalDate;
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long idVehicle;
+    private Long id;
 
     @Column(name = "license_plate_number", unique = true)
     private String licensePlateNumber;
@@ -45,7 +50,7 @@ public class Vehicle {
     private TransmType transmissionType; // Automatic , Manual
 
     @Column(name = "horse_power")
-    private int horsPower; //horsePower
+    private int horsPower;
 
 
     @Column(name = "price_per_day")
@@ -53,17 +58,27 @@ public class Vehicle {
 
     private Boolean isAvailable;
 
-    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    private Insurance insurance;
-
-
     @Column(name = "last_maintenance_mileage")
     private int lastMaintenanceMileage;
 
 
+    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
+    private Insurance insurance;
+
     @ManyToOne
-    @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+    @OneToMany
+    @JsonManagedReference
+    private Set<Reservation> reservations;
+
+
+    @CreationTimestamp
+    private LocalDateTime createdOn;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedOn;
+
 
 }

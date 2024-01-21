@@ -35,4 +35,13 @@ public class VehicleDto {
 
     private Boolean isAvailable;
 
+// todo: add create Dto from Model
+
+//    public record CarDTO(@NonNull String id, String make, String model) {
+//
+//        public static CarDTO fromModel(Car car) {
+//            return new CarDTO(car.id(), car.make(), car.model());
+//        }
+//    }
+
 }

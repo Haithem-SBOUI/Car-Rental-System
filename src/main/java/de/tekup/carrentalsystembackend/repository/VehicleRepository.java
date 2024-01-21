@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    Optional<Vehicle> findVehicleByIdVehicle(Long id);
+    Optional<Vehicle> findVehicleById(Long id);
 
     Optional<List<Vehicle>> findAllByBrand(CarBrand brand);
 

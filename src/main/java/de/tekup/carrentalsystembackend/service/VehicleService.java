@@ -2,27 +2,31 @@ package de.tekup.carrentalsystembackend.service;
 
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
 import de.tekup.carrentalsystembackend.model.*;
+import de.tekup.carrentalsystembackend.repository.ReservationRepository;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
 import de.tekup.carrentalsystembackend.repository.VehicleRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class VehicleService {
-    @Autowired
-    private VehicleRepository vehicleRepository;
+import static java.time.LocalDate.*;
 
-    @Autowired
-    private UserRepository userRepository;
+@Service
+@RequiredArgsConstructor
+public class VehicleService {
+    private final VehicleRepository vehicleRepository;
+    private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
 
 
     public Vehicle findVehicleById(Long id) {
-        return vehicleRepository.findVehicleByIdVehicle(id).orElse(null);
+        return vehicleRepository.findVehicleById(id).orElse(null);
     }
 
     public void addVehicle(Long idUser, VehicleDto vehicleDto) {
@@ -151,5 +155,17 @@ public class VehicleService {
         return vehicleRepository.findAllByIsAvailable(isAvailable);
     }
 
+    public Optional<List<Vehicle>> findAllFreeVehicleByDateTime(String startDateParam) {
 
+//        LocalDateTime startDate = LocalDateTime.parse(startDateParam);
+
+        LocalDateTime startDate = LocalDateTime.parse(startDateParam + "T23:59:59.999");
+//        todo: optimize this query!!!
+        Optional<List<Vehicle>> availableVehicles = vehicleRepository.findAllByIsAvailable(true);
+        availableVehicles.ifPresent(vehicles -> vehicles.removeIf(
+                vehicle -> reservationRepository.existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(vehicle, startDate, startDate))
+        );
+
+        return availableVehicles;
+    }
 }
