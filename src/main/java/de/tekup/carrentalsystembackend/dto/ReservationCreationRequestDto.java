@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -22,11 +23,13 @@ public class ReservationCreationRequestDto {
 
     private Long vehicleId;
 
-    private LocalDateTime pickupDate;
+    private LocalDate pickupDate;
 
-    private LocalDateTime returnDate;
+    private LocalDate returnDate;
 
-    private float totalCost;
+    private float totalPrice;
+
+    private int nbDate;
 
     private String status;
 

@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    @PostMapping("/add-reservation")
-    public ResponseEntity<?> addReservation(@RequestBody ReservationCreationRequestDto reservationCreationRequestDto) {
+    @PostMapping("/create-reservation")
+    public ResponseEntity<?> createReservation(@RequestBody ReservationCreationRequestDto reservationCreationRequestDto) {
         try {
-            return ResponseEntity.ok().body(reservationService.addReservation(reservationCreationRequestDto));
+            return ResponseEntity.ok().body(reservationService.createReservation(reservationCreationRequestDto));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }

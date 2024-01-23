@@ -43,7 +43,7 @@ public class VehicleService {
             vehicleRepository.save(vehicle);
 
             // Add the vehicle to the user's list of vehicles
-            user.getVehicles().add(vehicle);
+//            user.getVehicles().add(vehicle);
             userRepository.save(user);
         } else {
             // throw new AccessDeniedException("Your not Admin Role");
@@ -159,7 +159,8 @@ public class VehicleService {
 
 //        LocalDateTime startDate = LocalDateTime.parse(startDateParam);
 
-        LocalDateTime startDate = LocalDateTime.parse(startDateParam + "T23:59:59.999");
+//        LocalDateTime startDate = LocalDateTime.parse(startDateParam + "T23:59:59.999");
+        LocalDate startDate = LocalDate.parse(startDateParam);
 //        todo: optimize this query!!!
         Optional<List<Vehicle>> availableVehicles = vehicleRepository.findAllByIsAvailable(true);
         availableVehicles.ifPresent(vehicles -> vehicles.removeIf(

@@ -21,7 +21,7 @@ public class ReservationService {
     private final VehicleRepository vehicleRepository;
 
 
-    public Reservation addReservation(ReservationCreationRequestDto reservationDto) {
+    public Reservation createReservation(ReservationCreationRequestDto reservationDto) {
         Optional<User> user = userRepository.findById(reservationDto.getUserId());
         Optional<Vehicle> vehicle = vehicleRepository.findById(reservationDto.getVehicleId());
 
@@ -42,7 +42,8 @@ public class ReservationService {
         reservation.setVehicle(vehicle);
         reservation.setPickupDate(reservationDto.getPickupDate());
         reservation.setReturnDate(reservationDto.getReturnDate());
-        reservation.setTotalCost(reservationDto.getTotalCost());
+        reservation.setTotalPrice(reservationDto.getTotalPrice());
+        reservation.setNbDate(reservationDto.getNbDate());
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
             reservation.setStatus("APPROVED");
         } else {

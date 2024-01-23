@@ -18,7 +18,9 @@ public class ReservationCreationResponseDto {
 
     private LocalDateTime returnDate;
 
-    private float totalCost;
+    private float totalPrice;
+
+    private int nbDate;
 
     private String status;
 

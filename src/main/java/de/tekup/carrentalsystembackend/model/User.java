@@ -1,5 +1,6 @@
 package de.tekup.carrentalsystembackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -53,6 +54,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonManagedReference
     private Set<Reservation> reservations = new HashSet<>();
+
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    private FavoriteVehicle favoriteVehicle;
 
 
     @CreationTimestamp

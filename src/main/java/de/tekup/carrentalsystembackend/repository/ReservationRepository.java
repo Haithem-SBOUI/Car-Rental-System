@@ -14,5 +14,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //@Query("select r from Reservation r where r.pickupDate <= ?1 and r.returnDate >= ?2")
 //List<Reservation> findAllByPickupDateIsLessThanEqualAndReturnDateGreaterThanEqual()
 
-    boolean existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(Vehicle vehicle, LocalDateTime pickupDate, LocalDateTime returnDate);
+    boolean existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(Vehicle vehicle, LocalDate pickupDate, LocalDate returnDate);
 }

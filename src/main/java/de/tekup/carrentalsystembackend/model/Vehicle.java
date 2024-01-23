@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -64,6 +66,10 @@ public class Vehicle {
 
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private Insurance insurance;
+
+    @ManyToMany(mappedBy = "vehicles", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private Set<FavoriteVehicle> favoriteVehicle;
 
     @ManyToOne
     @JsonBackReference
