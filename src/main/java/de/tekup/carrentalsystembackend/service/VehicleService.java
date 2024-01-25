@@ -9,13 +9,14 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDate.*;
+import de.tekup.carrentalsystembackend.dto.mapper.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +24,14 @@ public class VehicleService {
     private final VehicleRepository vehicleRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    private final VehicleMapper vehicleMapper;
 
+    public VehicleDto findVehicleById(Long id) {
+        Optional<Vehicle> optionalVehicle = vehicleRepository.findVehicleById(id);
 
-    public Vehicle findVehicleById(Long id) {
-        return vehicleRepository.findVehicleById(id).orElse(null);
+        // If vehicle is present, map it to DTO, otherwise return null or handle as needed
+
+        return optionalVehicle.map(vehicleMapper::toDTO).orElse(null);
     }
 
     public void addVehicle(Long idUser, VehicleDto vehicleDto) {
@@ -155,7 +160,7 @@ public class VehicleService {
         return vehicleRepository.findAllByIsAvailable(isAvailable);
     }
 
-    public Optional<List<Vehicle>> findAllFreeVehicleByDateTime(String startDateParam) {
+    public List<VehicleDto> findAllFreeVehicleByDateTime(String startDateParam) {
 
 //        LocalDateTime startDate = LocalDateTime.parse(startDateParam);
 
@@ -163,10 +168,14 @@ public class VehicleService {
         LocalDate startDate = LocalDate.parse(startDateParam);
 //        todo: optimize this query!!!
         Optional<List<Vehicle>> availableVehicles = vehicleRepository.findAllByIsAvailable(true);
-        availableVehicles.ifPresent(vehicles -> vehicles.removeIf(
-                vehicle -> reservationRepository.existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(vehicle, startDate, startDate))
-        );
+//        availableVehicles.ifPresent(vehicles -> vehicles.removeIf(
+//                vehicle -> reservationRepository.existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(vehicle, startDate, startDate))
+//        );
 
-        return availableVehicles;
+        List<VehicleDto> vehicleDtoList = availableVehicles.get().stream()
+                .map(vehicleMapper::toDTO)
+                .collect(toList());
+
+        return vehicleDtoList;
     }
 }
