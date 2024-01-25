@@ -10,10 +10,18 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+
+import de.tekup.carrentalsystembackend.dto.mapper.*;
+
+import static java.util.stream.Collectors.toList;
+
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +32,12 @@ public class VehicleService {
     private final VehicleMapper vehicleMapper;
 
 
+    public VehicleDto findVehicleById(Long id) {
+        Optional<Vehicle> optionalVehicle = vehicleRepository.findVehicleById(id);
 
-    public Vehicle findVehicleById(Long id) {
-        return vehicleRepository.findVehicleById(id).orElse(null);
+        // If vehicle is present, map it to DTO, otherwise return null or handle as needed
+
+        return optionalVehicle.map(vehicleMapper::toDTO).orElse(null);
     }
 
     public void addVehicle(Long idUser, VehicleDto vehicleDto) {
@@ -169,7 +180,8 @@ public class VehicleService {
 
         List<VehicleDto> vehicleDtoList = availableVehicles.get().stream()
                 .map(vehicleMapper::toDTO)
-                .collect(Collectors.toList());
+                .collect(toList());
+
 
         return vehicleDtoList;
     }

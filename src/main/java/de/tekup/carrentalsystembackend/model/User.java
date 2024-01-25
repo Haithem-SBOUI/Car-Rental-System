@@ -50,7 +50,7 @@ public class User implements Serializable {
     private UserRole role;
 
 //    @OneToMany(mappedBy = "user")
-//    @JsonBackReference
+//    @JsonManagedReference
 //    private Set<Vehicle> vehicles = new HashSet<>();
 
 
