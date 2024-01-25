@@ -53,7 +53,7 @@ public class VehicleController {
     }
 
     @GetMapping("/find-all-free-vehicle-by-date-time")
-    public Optional<List<Vehicle>> findAllFreeVehicleByDateTime(@RequestParam String startDate) {
+    public List<VehicleDto> findAllFreeVehicleByDateTime(@RequestParam String startDate) {
         System.out.println(startDate);
         System.out.println("hey");
         return vehicleService.findAllFreeVehicleByDateTime(startDate);

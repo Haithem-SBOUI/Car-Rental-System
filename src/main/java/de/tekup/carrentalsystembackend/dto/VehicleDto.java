@@ -11,6 +11,8 @@ import java.time.LocalDate;
 @Data
 public class VehicleDto {
 
+    private Long id;
+
     private String licensePlateNumber;
 
     private CarBrand brand;

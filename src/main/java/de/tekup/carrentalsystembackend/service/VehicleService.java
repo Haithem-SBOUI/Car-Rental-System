@@ -1,6 +1,7 @@
 package de.tekup.carrentalsystembackend.service;
 
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
+import de.tekup.carrentalsystembackend.dto.modelMapper.VehicleMapper;
 import de.tekup.carrentalsystembackend.model.*;
 import de.tekup.carrentalsystembackend.repository.ReservationRepository;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
@@ -10,12 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-
-import static java.time.LocalDate.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +21,8 @@ public class VehicleService {
     private final VehicleRepository vehicleRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    private final VehicleMapper vehicleMapper;
+
 
 
     public Vehicle findVehicleById(Long id) {
@@ -39,12 +39,12 @@ public class VehicleService {
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
             // Create new vehicle instance from the dto
             Vehicle vehicle = convertDtoToInstance(vehicleDto);
-            vehicle.setUser(user);
+//            vehicle.setUser(user);
             vehicleRepository.save(vehicle);
 
             // Add the vehicle to the user's list of vehicles
 //            user.getVehicles().add(vehicle);
-            userRepository.save(user);
+//            userRepository.save(user);
         } else {
             // throw new AccessDeniedException("Your not Admin Role");
 
@@ -155,7 +155,7 @@ public class VehicleService {
         return vehicleRepository.findAllByIsAvailable(isAvailable);
     }
 
-    public Optional<List<Vehicle>> findAllFreeVehicleByDateTime(String startDateParam) {
+    public List<VehicleDto> findAllFreeVehicleByDateTime(String startDateParam) {
 
 //        LocalDateTime startDate = LocalDateTime.parse(startDateParam);
 
@@ -163,10 +163,14 @@ public class VehicleService {
         LocalDate startDate = LocalDate.parse(startDateParam);
 //        todo: optimize this query!!!
         Optional<List<Vehicle>> availableVehicles = vehicleRepository.findAllByIsAvailable(true);
-        availableVehicles.ifPresent(vehicles -> vehicles.removeIf(
-                vehicle -> reservationRepository.existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(vehicle, startDate, startDate))
-        );
+//        availableVehicles.ifPresent(vehicles -> vehicles.removeIf(
+//                vehicle -> reservationRepository.existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(vehicle, startDate, startDate))
+//        );
 
-        return availableVehicles;
+        List<VehicleDto> vehicleDtoList = availableVehicles.get().stream()
+                .map(vehicleMapper::toDTO)
+                .collect(Collectors.toList());
+
+        return vehicleDtoList;
     }
 }
