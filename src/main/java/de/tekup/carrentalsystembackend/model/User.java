@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -52,13 +53,7 @@ public class User implements Serializable {
 //    @JsonManagedReference
 //    private Set<Vehicle> vehicles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference
-    private Set<Reservation> reservations = new HashSet<>();
 
-    @OneToOne(mappedBy = "user")
-    @JsonIgnore
-    private FavoriteVehicle favoriteVehicle;
 
 
     @CreationTimestamp

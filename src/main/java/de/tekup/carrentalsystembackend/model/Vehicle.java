@@ -1,6 +1,10 @@
 package de.tekup.carrentalsystembackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -9,6 +13,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
+
+import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -19,7 +26,9 @@ import java.util.Set;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
+
 public class Vehicle implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -72,6 +81,9 @@ public class Vehicle implements Serializable {
     @ManyToOne
     @JsonManagedReference
     private User user;
+
+
+
 
     @OneToMany
     @JsonIgnoreProperties("vehicles")
