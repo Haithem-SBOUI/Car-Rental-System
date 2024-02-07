@@ -1,16 +1,23 @@
 package de.tekup.carrentalsystembackend.service;
 
+import de.tekup.carrentalsystembackend.core.exception.type.NotFoundException;
+import de.tekup.carrentalsystembackend.core.exception.type.UnauthorizedException;
 import de.tekup.carrentalsystembackend.dto.ReservationCreationRequestDto;
+import de.tekup.carrentalsystembackend.dto.ReservationDto;
+import de.tekup.carrentalsystembackend.dto.modelMapper.ReservationMapper;
 import de.tekup.carrentalsystembackend.model.Reservation;
 import de.tekup.carrentalsystembackend.model.User;
 import de.tekup.carrentalsystembackend.model.UserRole;
 import de.tekup.carrentalsystembackend.model.Vehicle;
+import de.tekup.carrentalsystembackend.model.enums.StatusEnum;
 import de.tekup.carrentalsystembackend.repository.ReservationRepository;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
 import de.tekup.carrentalsystembackend.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +26,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
+    private final ReservationMapper reservationMapper;
 
 
     public Reservation createReservation(ReservationCreationRequestDto reservationDto) {
@@ -45,10 +53,40 @@ public class ReservationService {
         reservation.setTotalPrice(reservationDto.getTotalPrice());
         reservation.setNbDate(reservationDto.getNbDate());
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
-            reservation.setStatus("APPROVED");
+            reservation.setStatus(StatusEnum.PENDING);
         } else {
-            reservation.setStatus("PENDING");
+            reservation.setStatus(StatusEnum.CONFIRMED);
         }
         return reservation;
     }
+
+
+    public List<ReservationDto> findReservationByUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+
+        List<Reservation> reservations = reservationRepository.findByUser(user);
+        if (!reservations.isEmpty()) {
+            return reservationMapper.toDtoList(reservations);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+
+    public ReservationDto findReservationById(Long id) {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new NotFoundException("Reservation not found"));
+        return reservationMapper.toDto(reservation);
+    }
+
+    public void deleteReservationById(Long userId, Long id) {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new NotFoundException("Reservation not found"));
+
+        if (reservation.getUser().getId().equals(userId) || reservation.getUser().getRole().equals(UserRole.ROLE_ADMIN)) {
+            reservationRepository.deleteById(id);
+        } else {
+            throw new UnauthorizedException("Unauthorized Action");
+        }
+    }
 }
+
+

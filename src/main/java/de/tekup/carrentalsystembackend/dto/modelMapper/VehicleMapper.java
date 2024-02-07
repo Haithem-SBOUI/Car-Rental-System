@@ -10,8 +10,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class VehicleMapper {
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    public VehicleMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     public VehicleDto toDTO(Vehicle vehicle) {
         return modelMapper.map(vehicle, VehicleDto.class);

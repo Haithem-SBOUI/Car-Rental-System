@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-import de.tekup.carrentalsystembackend.dto.mapper.*;
+import de.tekup.carrentalsystembackend.dto.modelMapper.*;
 
 import static java.util.stream.Collectors.toList;
 

@@ -55,7 +55,7 @@ public class Vehicle implements Serializable {
     private FuelType fuel; //Gasoline (Petrol), Diesel, Electric
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "transmission _type")
+    @Column(name = "transmission_type")
     private TransmType transmissionType; // Automatic , Manual
 
     @Column(name = "horse_power")

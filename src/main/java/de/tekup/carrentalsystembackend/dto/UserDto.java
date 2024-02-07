@@ -2,7 +2,7 @@ package de.tekup.carrentalsystembackend.dto;
 
 
 import de.tekup.carrentalsystembackend.model.UserRole;
-import lombok.Value;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -10,7 +10,10 @@ import java.time.LocalDateTime;
 /**
  * DTO for {@link de.tekup.carrentalsystembackend.model.User}
  */
-@Value
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto implements Serializable {
     Long id;
     String username;
