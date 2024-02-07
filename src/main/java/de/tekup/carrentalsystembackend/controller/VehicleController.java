@@ -1,6 +1,7 @@
 package de.tekup.carrentalsystembackend.controller;
 
 
+import de.tekup.carrentalsystembackend.dto.StringToJsonDto;
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
 import de.tekup.carrentalsystembackend.model.*;
 import de.tekup.carrentalsystembackend.service.VehicleService;
@@ -27,7 +28,11 @@ public class VehicleController {
 
         try {
             vehicleService.addVehicle(idUser, vehicleDto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    StringToJsonDto.builder()
+                            .message("Vehicle Created Successfully")
+                            .build()
+            );
         } catch (EntityNotFoundException e) {
             // exception if the email or username already exists
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found!");
@@ -48,8 +53,13 @@ public class VehicleController {
     }
 
     @GetMapping("/get-all-vehicle")
-    public List<Vehicle> getAllVehicle() {
-        return vehicleService.getAllVehicle();
+    public ResponseEntity<?> getAllVehicle() {
+        List<VehicleDto> publicVehicles = vehicleService.getAllVehicle();
+        if (!publicVehicles.isEmpty()) {
+            return ResponseEntity.ok(publicVehicles);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @GetMapping("/find-all-free-vehicle-by-date-time")
@@ -105,11 +115,10 @@ public class VehicleController {
             if (vehicles.isEmpty()) {
                 return new ResponseEntity<List<Vehicle>>(HttpStatus.NO_CONTENT);
             }
-            return  ResponseEntity.ok(vehicles);
+            return ResponseEntity.ok(vehicles);
 
-        }catch (Exception e)
-        {
-          return new ResponseEntity<List<Vehicle>>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<List<Vehicle>>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -149,33 +158,19 @@ public class VehicleController {
 
     //Update Vehicle by Id
     @PutMapping("/updateVehicle/{id}")
-    public Vehicle updateVehicle(@PathVariable Long id, @RequestBody Vehicle vehicle) {
-        Vehicle v1 = vehicleService.getVehicleById(id);
-        if (v1 != null) {
-            vehicle.setId(id);
-            return vehicleService.updateVehicle(vehicle);
-        } else {
-            throw new RuntimeException("Fail update vehicle not found !!");
-        }
+    public ResponseEntity<?> updateVehicle(@PathVariable Long id, @RequestBody VehicleDto vehicleDto) {
+        return ResponseEntity.ok().body(
+                StringToJsonDto.builder()
+                        .message(vehicleService.updateVehicle(id, vehicleDto))
+                        .build());
+
     }
 
     //Delete Vehicle By Id
-    @DeleteMapping("/deleteVehicle/{id}")
-    public HashMap<String, String> deleteVehicle(@PathVariable Long id) {
-        HashMap<String, String> deletStat = new HashMap<>();
-        if (vehicleService.getVehicleById(id) == null) {
-            deletStat.put("Status -->", " Error Vehicle Not Found !!!!");
-
-            return deletStat;
-        }
-        try {
-            vehicleService.getVehicleById(id);
-            deletStat.put("Status -->", "Successfully Deleting");
-            return deletStat;
-        } catch (Exception e) {
-            deletStat.put("Status -->", " Error Vehicle Not deleted");
-            return deletStat;
-        }
+    @DeleteMapping("/delete-vehicle-by-id/{userId}/{id}")
+    public ResponseEntity<?> deleteVehicleById(@PathVariable Long userId, @PathVariable Long id) {
+        vehicleService.deleteVehicleById(userId, id);
+        return ResponseEntity.noContent().build();
     }
 
 

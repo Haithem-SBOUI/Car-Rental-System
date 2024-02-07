@@ -1,5 +1,8 @@
 package de.tekup.carrentalsystembackend.service;
 
+import de.tekup.carrentalsystembackend.core.exception.type.InternalServerErrorException;
+import de.tekup.carrentalsystembackend.core.exception.type.NotFoundException;
+import de.tekup.carrentalsystembackend.core.exception.type.UnauthorizedException;
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
 import de.tekup.carrentalsystembackend.dto.modelMapper.VehicleMapper;
 import de.tekup.carrentalsystembackend.model.*;
@@ -11,16 +14,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 
-import de.tekup.carrentalsystembackend.dto.modelMapper.*;
-
 import static java.util.stream.Collectors.toList;
-
-import java.util.stream.Collectors;
 
 
 @Service
@@ -35,12 +36,10 @@ public class VehicleService {
     public VehicleDto findVehicleById(Long id) {
         Optional<Vehicle> optionalVehicle = vehicleRepository.findVehicleById(id);
 
-        // If vehicle is present, map it to DTO, otherwise return null or handle as needed
-
         return optionalVehicle.map(vehicleMapper::toDTO).orElse(null);
     }
 
-    public void addVehicle(Long idUser, VehicleDto vehicleDto) {
+    public void addVehicle(Long idUser, VehicleDto vehicleDto) throws AccessDeniedException {
 
         // Retrieve the user from the database
         User user = userRepository.findById(idUser)
@@ -50,6 +49,7 @@ public class VehicleService {
         if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
             // Create new vehicle instance from the dto
             Vehicle vehicle = convertDtoToInstance(vehicleDto);
+            vehicle.setUser(user);
 //            vehicle.setUser(user);
             vehicleRepository.save(vehicle);
 
@@ -57,7 +57,7 @@ public class VehicleService {
 //            user.getVehicles().add(vehicle);
 //            userRepository.save(user);
         } else {
-            // throw new AccessDeniedException("Your not Admin Role");
+            throw new AccessDeniedException("Your not Admin Role");
 
         }
 
@@ -68,8 +68,12 @@ public class VehicleService {
         return vehicleRepository.findById(id).get();
     }
 
-    public Vehicle updateVehicle(Vehicle vehicle) {
-        return vehicleRepository.saveAndFlush(vehicle);
+    public String updateVehicle(Long id, VehicleDto updatedVehicleDto) {
+        Vehicle existingVehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Vehicle not found"));
+        Vehicle vehicle = vehicleMapper.toEntity(updatedVehicleDto);
+        vehicleRepository.save(vehicle);
+        return "Vehicle updated successfully";
     }
 
 
@@ -93,8 +97,13 @@ public class VehicleService {
     }
 
 
-    public List<Vehicle> getAllVehicle() {
-        return vehicleRepository.findAll();
+    public List<VehicleDto> getAllVehicle() {
+        List<Vehicle> allVehicles = vehicleRepository.findAll();
+        if (!allVehicles.isEmpty()) {
+            return vehicleMapper.toDtoList(allVehicles);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     public Optional<List<Vehicle>> findAllByBrand(CarBrand brand) {
@@ -184,5 +193,18 @@ public class VehicleService {
 
 
         return vehicleDtoList;
+    }
+
+    public void deleteVehicleById(Long userId, Long id) {
+        User user = userRepository.findById(userId)
+                .orElseThrow( () -> new UnauthorizedException("Unauthorized, user Not Found"));
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)){
+        vehicleRepository.deleteById(id);
+        }else {
+            throw new UnauthorizedException("Unauthorized");
+        }
+        if (vehicleRepository.existsById(id)) {
+            throw new InternalServerErrorException("problem while delete Vehicle with id : " + id);
+        }
     }
 }
