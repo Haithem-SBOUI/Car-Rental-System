@@ -157,13 +157,12 @@ public class VehicleController {
     }
 
     //Update Vehicle by Id
-    @PutMapping("/updateVehicle/{id}")
-    public ResponseEntity<?> updateVehicle(@PathVariable Long id, @RequestBody VehicleDto vehicleDto) {
+    @PutMapping("/update-vehicle-by-id")
+    public ResponseEntity<?> updateVehicle(@RequestBody VehicleDto vehicleDto) {
         return ResponseEntity.ok().body(
                 StringToJsonDto.builder()
-                        .message(vehicleService.updateVehicle(id, vehicleDto))
+                        .message(vehicleService.updateVehicle(vehicleDto))
                         .build());
-
     }
 
     //Delete Vehicle By Id

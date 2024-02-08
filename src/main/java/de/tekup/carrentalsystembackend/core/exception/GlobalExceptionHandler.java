@@ -1,10 +1,7 @@
 package de.tekup.carrentalsystembackend.core.exception;
 
 
-import de.tekup.carrentalsystembackend.core.exception.type.AlreadyExistsException;
-import de.tekup.carrentalsystembackend.core.exception.type.InternalServerErrorException;
-import de.tekup.carrentalsystembackend.core.exception.type.NotFoundException;
-import de.tekup.carrentalsystembackend.core.exception.type.UnauthorizedException;
+import de.tekup.carrentalsystembackend.core.exception.type.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +33,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> internalServerErrorException(InternalServerErrorException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+
+    @ExceptionHandler(BadParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> badParameterException(BadParameterException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
 

@@ -1,5 +1,6 @@
 package de.tekup.carrentalsystembackend.service;
 
+import de.tekup.carrentalsystembackend.core.exception.type.BadParameterException;
 import de.tekup.carrentalsystembackend.core.exception.type.NotFoundException;
 import de.tekup.carrentalsystembackend.core.exception.type.UnauthorizedException;
 import de.tekup.carrentalsystembackend.dto.ReservationCreationRequestDto;
@@ -87,6 +88,43 @@ public class ReservationService {
             throw new UnauthorizedException("Unauthorized Action");
         }
     }
+
+    public List<ReservationDto> findAllReservation() {
+        List<Reservation> allReservation = reservationRepository.findAll();
+        return reservationMapper.toDtoList(allReservation);
+
+    }
+
+
+
+    public ReservationDto changeReservationStatus(Long id, String status) {
+        StatusEnum newStatus = StatusEnum.valueOf(status.toUpperCase());
+
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Reservation Not Found"));
+
+        if (isValidTransition(reservation.getStatus(), newStatus)) {
+            reservation.setStatus(newStatus);
+            return reservationMapper.toDto(reservationRepository.save(reservation));
+        }else {
+            throw new BadParameterException("Invalid status transition from " + reservation.getStatus() + " to " + status);
+        }
+
+    }
+
+    private boolean isValidTransition(StatusEnum currentStatus, StatusEnum newStatus) {
+        return switch (newStatus) {
+            case CANCELED -> currentStatus.equals(StatusEnum.PENDING) || currentStatus.equals(StatusEnum.CONFIRMED);
+            case PENDING -> currentStatus.equals(StatusEnum.CANCELED) || currentStatus.equals(StatusEnum.CONFIRMED);
+            case CONFIRMED -> currentStatus.equals(StatusEnum.CANCELED) || currentStatus.equals(StatusEnum.PENDING);
+            case PAYED -> currentStatus.equals(StatusEnum.CONFIRMED);
+            case COMPLETED -> currentStatus.equals(StatusEnum.PAYED);
+            default -> false;
+        };
+    }
+
+
+
 }
 
 

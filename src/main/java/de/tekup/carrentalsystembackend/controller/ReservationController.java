@@ -4,6 +4,7 @@ import de.tekup.carrentalsystembackend.dto.ReservationCreationRequestDto;
 import de.tekup.carrentalsystembackend.dto.ReservationDto;
 import de.tekup.carrentalsystembackend.dto.StringToJsonDto;
 import de.tekup.carrentalsystembackend.model.Reservation;
+import de.tekup.carrentalsystembackend.model.enums.StatusEnum;
 import de.tekup.carrentalsystembackend.service.ReservationService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,16 @@ public class ReservationController {
         }
     }
 
+    @GetMapping("/find-all-reservation")
+    public ResponseEntity<?> findAllReservation() {
+        List<ReservationDto> reservationDtoList = reservationService.findAllReservation();
+        if (!reservationDtoList.isEmpty()) {
+            return ResponseEntity.ok(reservationDtoList);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
     @GetMapping("/find-reservation-by-user-id/{id}")
     public ResponseEntity<?> findReservationByUser(@PathVariable Long id) {
         List<ReservationDto> reservationDtoList = reservationService.findReservationByUser(id);
@@ -37,11 +48,20 @@ public class ReservationController {
             return ResponseEntity.noContent().build();
         }
     }
+
     @GetMapping("/find-reservation-by-id/{id}")
     public ResponseEntity<?> findReservationById(@PathVariable Long id) {
         ReservationDto reservation = reservationService.findReservationById(id);
-            return ResponseEntity.ok(reservation);
+        return ResponseEntity.ok(reservation);
     }
+
+    @PutMapping("/change-reservation-status/{id}")
+    public ResponseEntity<?> changeReservationStatus(@PathVariable Long id, @RequestBody String status) {
+        System.out.println(status);
+
+        return ResponseEntity.ok().body(reservationService.changeReservationStatus(id, status));
+    }
+
 
     @DeleteMapping("/delete-reservation-by-id/{userId}/{id}")
     public ResponseEntity<?> deleteReservationById(@PathVariable Long userId, @PathVariable Long id) {

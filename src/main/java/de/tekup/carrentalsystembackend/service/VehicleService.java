@@ -68,8 +68,8 @@ public class VehicleService {
         return vehicleRepository.findById(id).get();
     }
 
-    public String updateVehicle(Long id, VehicleDto updatedVehicleDto) {
-        Vehicle existingVehicle = vehicleRepository.findById(id)
+    public String updateVehicle(VehicleDto updatedVehicleDto) {
+        Vehicle existingVehicle = vehicleRepository.findById(updatedVehicleDto.getId())
                 .orElseThrow(() -> new NotFoundException("Vehicle not found"));
         Vehicle vehicle = vehicleMapper.toEntity(updatedVehicleDto);
         vehicleRepository.save(vehicle);
