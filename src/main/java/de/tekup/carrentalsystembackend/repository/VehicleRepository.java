@@ -1,9 +1,8 @@
 package de.tekup.carrentalsystembackend.repository;
 
-import de.tekup.carrentalsystembackend.model.CarBrand;
-import de.tekup.carrentalsystembackend.model.FuelType;
-import de.tekup.carrentalsystembackend.model.TransmType;
-import de.tekup.carrentalsystembackend.model.TransmType;
+import de.tekup.carrentalsystembackend.model.enums.CarBrand;
+import de.tekup.carrentalsystembackend.model.enums.FuelType;
+import de.tekup.carrentalsystembackend.model.enums.TransmType;
 import de.tekup.carrentalsystembackend.model.Vehicle;
 import org.springframework.data.jpa.repository.JpaRepository;
 

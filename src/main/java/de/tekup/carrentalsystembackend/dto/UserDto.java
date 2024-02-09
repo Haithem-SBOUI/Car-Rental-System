@@ -1,7 +1,7 @@
 package de.tekup.carrentalsystembackend.dto;
 
 
-import de.tekup.carrentalsystembackend.model.UserRole;
+import de.tekup.carrentalsystembackend.model.enums.UserRole;
 import lombok.*;
 
 import java.io.Serializable;

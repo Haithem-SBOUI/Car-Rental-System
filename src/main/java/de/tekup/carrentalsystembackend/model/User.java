@@ -1,8 +1,6 @@
 package de.tekup.carrentalsystembackend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import de.tekup.carrentalsystembackend.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -10,9 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "user")

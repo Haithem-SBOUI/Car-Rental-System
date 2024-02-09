@@ -1,6 +1,6 @@
 package de.tekup.carrentalsystembackend.model.enums;
 
-public enum StatusEnum {
+public enum ReservationStatusEnum {
     CANCELED,
     PENDING,
     CONFIRMED,

@@ -1,4 +1,4 @@
-package de.tekup.carrentalsystembackend.model;
+package de.tekup.carrentalsystembackend.model.enums;
 
 public enum FuelType {
     Gasoline,

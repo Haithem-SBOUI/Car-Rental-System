@@ -1,15 +1,13 @@
 package de.tekup.carrentalsystembackend.dto;
 
-import de.tekup.carrentalsystembackend.model.CarBrand;
-import de.tekup.carrentalsystembackend.model.FuelType;
-import de.tekup.carrentalsystembackend.model.TransmType;
+import de.tekup.carrentalsystembackend.model.enums.CarBrand;
+import de.tekup.carrentalsystembackend.model.enums.FuelType;
+import de.tekup.carrentalsystembackend.model.enums.TransmType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @Builder

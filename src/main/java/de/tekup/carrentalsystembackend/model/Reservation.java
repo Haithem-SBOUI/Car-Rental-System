@@ -2,7 +2,7 @@ package de.tekup.carrentalsystembackend.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import de.tekup.carrentalsystembackend.model.enums.StatusEnum;
+import de.tekup.carrentalsystembackend.model.enums.ReservationStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,7 +31,7 @@ public class Reservation {
 
     private int nbDate;
     @Enumerated(EnumType.STRING)
-    private StatusEnum status;
+    private ReservationStatusEnum status;
 
     @CreationTimestamp
     private LocalDateTime createdOn;

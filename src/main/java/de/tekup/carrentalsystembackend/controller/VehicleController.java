@@ -4,6 +4,9 @@ package de.tekup.carrentalsystembackend.controller;
 import de.tekup.carrentalsystembackend.dto.StringToJsonDto;
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
 import de.tekup.carrentalsystembackend.model.*;
+import de.tekup.carrentalsystembackend.model.enums.CarBrand;
+import de.tekup.carrentalsystembackend.model.enums.FuelType;
+import de.tekup.carrentalsystembackend.model.enums.TransmType;
 import de.tekup.carrentalsystembackend.service.VehicleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 

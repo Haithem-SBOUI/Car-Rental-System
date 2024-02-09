@@ -6,6 +6,10 @@ import de.tekup.carrentalsystembackend.core.exception.type.UnauthorizedException
 import de.tekup.carrentalsystembackend.dto.VehicleDto;
 import de.tekup.carrentalsystembackend.dto.modelMapper.VehicleMapper;
 import de.tekup.carrentalsystembackend.model.*;
+import de.tekup.carrentalsystembackend.model.enums.CarBrand;
+import de.tekup.carrentalsystembackend.model.enums.FuelType;
+import de.tekup.carrentalsystembackend.model.enums.TransmType;
+import de.tekup.carrentalsystembackend.model.enums.UserRole;
 import de.tekup.carrentalsystembackend.repository.ReservationRepository;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
 import de.tekup.carrentalsystembackend.repository.VehicleRepository;

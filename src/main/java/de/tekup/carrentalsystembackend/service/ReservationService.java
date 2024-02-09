@@ -8,9 +8,9 @@ import de.tekup.carrentalsystembackend.dto.ReservationDto;
 import de.tekup.carrentalsystembackend.dto.modelMapper.ReservationMapper;
 import de.tekup.carrentalsystembackend.model.Reservation;
 import de.tekup.carrentalsystembackend.model.User;
-import de.tekup.carrentalsystembackend.model.UserRole;
+import de.tekup.carrentalsystembackend.model.enums.UserRole;
 import de.tekup.carrentalsystembackend.model.Vehicle;
-import de.tekup.carrentalsystembackend.model.enums.StatusEnum;
+import de.tekup.carrentalsystembackend.model.enums.ReservationStatusEnum;
 import de.tekup.carrentalsystembackend.repository.ReservationRepository;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
 import de.tekup.carrentalsystembackend.repository.VehicleRepository;
@@ -30,35 +30,16 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
 
-    public Reservation createReservation(ReservationCreationRequestDto reservationDto) {
-        Optional<User> user = userRepository.findById(reservationDto.getUserId());
-        Optional<Vehicle> vehicle = vehicleRepository.findById(reservationDto.getVehicleId());
+    public Reservation createReservation(ReservationDto reservationDto) {
+        userRepository.findById(reservationDto.getUser().getId())
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
-        if (user.isPresent() && vehicle.isPresent()) {
-            Reservation reservation = convertDtoToEntity(user.get(), vehicle.get(), reservationDto);
-            return reservationRepository.save(reservation);
-        } else if (user.isEmpty()) {
-            throw new RuntimeException("user not found!!");
-        } else {
-            throw new RuntimeException("Vehicle not found!!");
-        }
-    }
+        vehicleRepository.findById(reservationDto.getVehicle().getId())
+                .orElseThrow(() -> new NotFoundException("Vehicle not found"));
 
+        Reservation reservation = reservationMapper.toEntity(reservationDto);
+        return reservationRepository.save(reservation);
 
-    private Reservation convertDtoToEntity(User user, Vehicle vehicle, ReservationCreationRequestDto reservationDto) {
-        Reservation reservation = new Reservation();
-        reservation.setUser(user);
-        reservation.setVehicle(vehicle);
-        reservation.setPickupDate(reservationDto.getPickupDate());
-        reservation.setReturnDate(reservationDto.getReturnDate());
-        reservation.setTotalPrice(reservationDto.getTotalPrice());
-        reservation.setNbDate(reservationDto.getNbDate());
-        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
-            reservation.setStatus(StatusEnum.PENDING);
-        } else {
-            reservation.setStatus(StatusEnum.CONFIRMED);
-        }
-        return reservation;
     }
 
 
@@ -96,9 +77,8 @@ public class ReservationService {
     }
 
 
-
     public ReservationDto changeReservationStatus(Long id, String status) {
-        StatusEnum newStatus = StatusEnum.valueOf(status.toUpperCase());
+        ReservationStatusEnum newStatus = ReservationStatusEnum.valueOf(status.toUpperCase());
 
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Reservation Not Found"));
@@ -106,23 +86,25 @@ public class ReservationService {
         if (isValidTransition(reservation.getStatus(), newStatus)) {
             reservation.setStatus(newStatus);
             return reservationMapper.toDto(reservationRepository.save(reservation));
-        }else {
+        } else {
             throw new BadParameterException("Invalid status transition from " + reservation.getStatus() + " to " + status);
         }
 
     }
 
-    private boolean isValidTransition(StatusEnum currentStatus, StatusEnum newStatus) {
+    private boolean isValidTransition(ReservationStatusEnum currentStatus, ReservationStatusEnum newStatus) {
         return switch (newStatus) {
-            case CANCELED -> currentStatus.equals(StatusEnum.PENDING) || currentStatus.equals(StatusEnum.CONFIRMED);
-            case PENDING -> currentStatus.equals(StatusEnum.CANCELED) || currentStatus.equals(StatusEnum.CONFIRMED);
-            case CONFIRMED -> currentStatus.equals(StatusEnum.CANCELED) || currentStatus.equals(StatusEnum.PENDING);
-            case PAYED -> currentStatus.equals(StatusEnum.CONFIRMED);
-            case COMPLETED -> currentStatus.equals(StatusEnum.PAYED);
+            case CANCELED ->
+                    currentStatus.equals(ReservationStatusEnum.PENDING) || currentStatus.equals(ReservationStatusEnum.CONFIRMED);
+            case PENDING ->
+                    currentStatus.equals(ReservationStatusEnum.CANCELED) || currentStatus.equals(ReservationStatusEnum.CONFIRMED);
+            case CONFIRMED ->
+                    currentStatus.equals(ReservationStatusEnum.CANCELED) || currentStatus.equals(ReservationStatusEnum.PENDING);
+            case PAYED -> currentStatus.equals(ReservationStatusEnum.CONFIRMED);
+            case COMPLETED -> currentStatus.equals(ReservationStatusEnum.PAYED);
             default -> false;
         };
     }
-
 
 
 }
