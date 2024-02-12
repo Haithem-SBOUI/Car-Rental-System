@@ -81,7 +81,7 @@ public class Vehicle implements Serializable {
 
 
     @OneToMany
-    @JsonIgnoreProperties("vehicles")
+    @JsonIgnoreProperties("vehicle")
     private Set<Reservation> reservations;
 
 

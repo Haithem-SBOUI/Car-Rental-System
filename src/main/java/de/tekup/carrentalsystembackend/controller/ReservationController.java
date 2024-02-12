@@ -36,6 +36,16 @@ public class ReservationController {
         }
     }
 
+    @GetMapping("/find-all-payed-reservation")
+    public ResponseEntity<?> findAllPayedReservation() {
+        List<ReservationDto> allPayedReservationDto = reservationService.findAllPayedReservation();
+        if (!allPayedReservationDto.isEmpty()) {
+            return ResponseEntity.ok(allPayedReservationDto);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
     @GetMapping("/find-reservation-by-user-id/{id}")
     public ResponseEntity<?> findReservationByUser(@PathVariable Long id) {
         List<ReservationDto> reservationDtoList = reservationService.findReservationByUser(id);
@@ -52,9 +62,9 @@ public class ReservationController {
         return ResponseEntity.ok(reservation);
     }
 
-    @PutMapping("/change-reservation-status/{id}")
-    public ResponseEntity<?> changeReservationStatus(@PathVariable Long id, @RequestBody String status) {
-        return ResponseEntity.ok().body(reservationService.changeReservationStatus(id, status));
+    @PutMapping("/change-reservation-status/{id}/{adminId}")
+    public ResponseEntity<?> changeReservationStatus(@PathVariable Long id, @PathVariable Long adminId, @RequestBody String status) {
+        return ResponseEntity.ok().body(reservationService.changeReservationStatus(id, adminId, status));
     }
 
 

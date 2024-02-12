@@ -43,6 +43,13 @@ public class VehicleService {
         return optionalVehicle.map(vehicleMapper::toDTO).orElse(null);
     }
 
+
+    public List<VehicleDto> findByFilters(LocalDate pickupDate, CarBrand brand, String model, Long maxPrice) {
+        List<Vehicle> vehicleList = vehicleRepository.findByFilters(pickupDate, brand, model, maxPrice);
+        return vehicleMapper.toDtoList(vehicleList);
+
+    }
+
     public void addVehicle(Long idUser, VehicleDto vehicleDto) throws AccessDeniedException {
 
         // Retrieve the user from the database
@@ -201,10 +208,10 @@ public class VehicleService {
 
     public void deleteVehicleById(Long userId, Long id) {
         User user = userRepository.findById(userId)
-                .orElseThrow( () -> new UnauthorizedException("Unauthorized, user Not Found"));
-        if (user.getRole().equals(UserRole.ROLE_ADMIN)){
-        vehicleRepository.deleteById(id);
-        }else {
+                .orElseThrow(() -> new UnauthorizedException("Unauthorized, user Not Found"));
+        if (user.getRole().equals(UserRole.ROLE_ADMIN)) {
+            vehicleRepository.deleteById(id);
+        } else {
             throw new UnauthorizedException("Unauthorized");
         }
         if (vehicleRepository.existsById(id)) {

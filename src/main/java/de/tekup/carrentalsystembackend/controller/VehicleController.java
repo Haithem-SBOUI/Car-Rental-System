@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,19 @@ public class VehicleController {
             // any other exceptions
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Verify The User Data");
         }
+    }
+
+
+    //  filter implementation
+
+    @GetMapping("/filter-vehicle")
+    public ResponseEntity<?> filterVehicle(
+            @RequestParam(required = false) LocalDate pickupDate,
+            @RequestParam(required = false) CarBrand brand,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) Long maxPrice) {
+        List<VehicleDto> vehicleDtoList = vehicleService.findByFilters(pickupDate, brand, model, maxPrice);
+        return ResponseEntity.ok(vehicleDtoList);
     }
 
 

@@ -36,8 +36,6 @@ public class User implements Serializable {
     @Column(length = 10, nullable = false)
     private String password;
 
-    //    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'https://www.freeiconspng.com/uploads/profile-icon-28.png'")
-    private String imageUrl;
 
 
     @Column(length = 50, nullable = false)

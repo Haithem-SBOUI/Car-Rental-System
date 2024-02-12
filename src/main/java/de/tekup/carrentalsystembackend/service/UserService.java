@@ -72,7 +72,6 @@ public class UserService {
         user.setLastname(registerDto.getLastname());
         user.setEmail(registerDto.getEmail());
         user.setPassword(registerDto.getPassword());
-        user.setImageUrl("https://www.freeiconspng.com/uploads/profile-icon-28.png");
         user.setPassword(registerDto.getPassword());
         user.setRole(registerDto.getRole());
         return user;

@@ -29,14 +29,14 @@ public class InvoiceController {
         return ResponseEntity.ok(allInvoices);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createMeeting(@RequestBody @Valid InvoiceDto invoiceDto) {
+    @PostMapping("/create-invoice")
+    public ResponseEntity<?> createInvoice(@RequestBody @Valid InvoiceDto invoiceDto) {
         InvoiceDto createdInvoice = invoiceService.createInvoice(invoiceDto);
         return ResponseEntity.ok(createdInvoice);
     }
 
     @GetMapping("/find-invoice-by-id/{id}")
-    public ResponseEntity<?> getInvoiceById(@PathVariable Long id) {
+    public ResponseEntity<?> findInvoiceById(@PathVariable Long id) {
         InvoiceDto invoices = invoiceService.getInvoiceById(id);
         return ResponseEntity.ok(invoices);
     }

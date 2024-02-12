@@ -7,6 +7,7 @@ import de.tekup.carrentalsystembackend.core.exception.type.UnauthorizedException
 import de.tekup.carrentalsystembackend.dto.InvoiceDto;
 import de.tekup.carrentalsystembackend.dto.modelMapper.InvoiceMapper;
 import de.tekup.carrentalsystembackend.model.Invoice;
+import de.tekup.carrentalsystembackend.model.Reservation;
 import de.tekup.carrentalsystembackend.repository.InvoiceRepository;
 import de.tekup.carrentalsystembackend.repository.ReservationRepository;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.tekup.carrentalsystembackend.model.enums.ReservationStatusEnum.CONFIRMED;
+import static de.tekup.carrentalsystembackend.model.enums.ReservationStatusEnum.PAYED;
 import static de.tekup.carrentalsystembackend.model.enums.UserRole.ROLE_ADMIN;
 
 @Service
@@ -31,11 +33,14 @@ public class InvoiceService {
     public InvoiceDto createInvoice(InvoiceDto invoiceDto) {
         Long clientId = invoiceDto.getAdmin().getId();
         Long reservationId = invoiceDto.getReservation().getId();
-        if (userRepository.existsByRoleAndId(ROLE_ADMIN, clientId)) {
+        if (!userRepository.existsByRoleAndId(ROLE_ADMIN, clientId)) {
             throw new UnauthorizedException("Unauthorized Action");
         }
-        if (reservationRepository.existsByIdAndStatus(reservationId, CONFIRMED)) {
-            throw new InvalidStatusException("Status must be Confirmed to be marked as payed");
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow( () -> new NotFoundException("Reservation Not Found") );
+
+        if (!(reservation.getStatus() == PAYED)) {
+            throw new InvalidStatusException("Status must be payed");
         }
 
         Invoice invoice = invoiceMapper.toEntity(invoiceDto);
@@ -44,8 +49,8 @@ public class InvoiceService {
     }
 
     public List<InvoiceDto> findAllInvoices() {
-        List<InvoiceDto> alInvoices = invoiceMapper.toDtoList(invoiceRepository.findAll());
-        return alInvoices;
+        List<InvoiceDto> allInvoices = invoiceMapper.toDtoList(invoiceRepository.findAll());
+        return allInvoices;
     }
 
     public InvoiceDto getInvoiceById(Long id) {

@@ -15,7 +15,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //List<Reservation> findAllByPickupDateIsLessThanEqualAndReturnDateGreaterThanEqual()
 
 
+    Reservation findByIdAndStatus(Long id, ReservationStatusEnum status);
+
     boolean existsByIdAndStatus(Long id, ReservationStatusEnum status);
+
+    List<Reservation> findByStatus(ReservationStatusEnum status);
+
 
     List<Reservation> findByUser(User user);
     boolean existsByVehicleAndPickupDateLessThanEqualAndReturnDateGreaterThanEqual(Vehicle vehicle, LocalDate pickupDate, LocalDate returnDate);

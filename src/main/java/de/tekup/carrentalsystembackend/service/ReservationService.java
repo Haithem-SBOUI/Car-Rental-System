@@ -3,20 +3,25 @@ package de.tekup.carrentalsystembackend.service;
 import de.tekup.carrentalsystembackend.core.exception.type.BadParameterException;
 import de.tekup.carrentalsystembackend.core.exception.type.NotFoundException;
 import de.tekup.carrentalsystembackend.core.exception.type.UnauthorizedException;
+import de.tekup.carrentalsystembackend.dto.InvoiceDto;
 import de.tekup.carrentalsystembackend.dto.ReservationCreationRequestDto;
 import de.tekup.carrentalsystembackend.dto.ReservationDto;
+import de.tekup.carrentalsystembackend.dto.UserDto;
 import de.tekup.carrentalsystembackend.dto.modelMapper.ReservationMapper;
 import de.tekup.carrentalsystembackend.model.Reservation;
 import de.tekup.carrentalsystembackend.model.User;
+import de.tekup.carrentalsystembackend.model.enums.PaymentMethodEnum;
 import de.tekup.carrentalsystembackend.model.enums.UserRole;
 import de.tekup.carrentalsystembackend.model.Vehicle;
 import de.tekup.carrentalsystembackend.model.enums.ReservationStatusEnum;
+import de.tekup.carrentalsystembackend.repository.InvoiceRepository;
 import de.tekup.carrentalsystembackend.repository.ReservationRepository;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
 import de.tekup.carrentalsystembackend.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +33,7 @@ public class ReservationService {
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final ReservationMapper reservationMapper;
+    private final InvoiceService invoiceService;
 
 
     public Reservation createReservation(ReservationDto reservationDto) {
@@ -73,11 +79,16 @@ public class ReservationService {
     public List<ReservationDto> findAllReservation() {
         List<Reservation> allReservation = reservationRepository.findAll();
         return reservationMapper.toDtoList(allReservation);
-
     }
 
 
-    public ReservationDto changeReservationStatus(Long id, String status) {
+    public List<ReservationDto> findAllPayedReservation() {
+        List<Reservation> allPayedReservation = reservationRepository.findByStatus(ReservationStatusEnum.PAYED);
+        return reservationMapper.toDtoList(allPayedReservation);
+    }
+
+
+    public ReservationDto changeReservationStatus(Long id, Long adminId, String status) {
         ReservationStatusEnum newStatus = ReservationStatusEnum.valueOf(status.toUpperCase());
 
         Reservation reservation = reservationRepository.findById(id)
@@ -85,7 +96,19 @@ public class ReservationService {
 
         if (isValidTransition(reservation.getStatus(), newStatus)) {
             reservation.setStatus(newStatus);
-            return reservationMapper.toDto(reservationRepository.save(reservation));
+            ReservationDto reservationDto = reservationMapper.toDto(reservationRepository.save(reservation));
+            if (newStatus == ReservationStatusEnum.PAYED) {
+                InvoiceDto invoiceDto = InvoiceDto.builder()
+                        .paymentMethod(PaymentMethodEnum.CASH)
+                        .issuedDate(LocalDateTime.now())
+                        .admin(UserDto.builder()
+                                .id(adminId)
+                                .build())
+                        .reservation(reservationDto)
+                        .build();
+                invoiceService.createInvoice(invoiceDto);
+            }
+            return reservationDto;
         } else {
             throw new BadParameterException("Invalid status transition from " + reservation.getStatus() + " to " + status);
         }
