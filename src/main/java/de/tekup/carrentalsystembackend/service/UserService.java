@@ -31,12 +31,10 @@ public class UserService {
             if (authRequest.getPassword().equals(user.get().getPassword())) {
                 Long id = user.get().getId();
                 String email = user.get().getEmail();
-                String username = user.get().getUsername();
                 userRepository.save(user.get());
                 return ResponseEntity.ok(AuthResponseDto.builder()
                         .id(id)
                         .email(email)
-                        .username(username)
                         .build());
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong password");
@@ -48,26 +46,17 @@ public class UserService {
 
     @Transactional
     public User register(RegisterDto newUser) {
-        validateUserDoesNotExist(newUser.getUsername(), newUser.getEmail());
+        if (userRepository.existsByEmail(newUser.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+        }
 
         User user = convertDtoToUserEntity(newUser);
         return userRepository.save(user);
     }
 
-    private void validateUserDoesNotExist(String username, String email) {
-        if (userRepository.existsByUsername(username)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
-        }
-
-        if (userRepository.existsByEmail(email)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
-        }
-    }
-
     private User convertDtoToUserEntity(RegisterDto registerDto) {
 
         User user = new User();
-        user.setUsername(registerDto.getUsername());
         user.setFirstname(registerDto.getFirstname());
         user.setLastname(registerDto.getLastname());
         user.setEmail(registerDto.getEmail());
@@ -82,8 +71,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public List<User> getAllUsers()
-    {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 }

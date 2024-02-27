@@ -21,8 +21,6 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50, unique = true, nullable = false)
-    private String username;
 
     @Column(length = 50, nullable = false)
     private String firstname;
@@ -36,6 +34,7 @@ public class User implements Serializable {
     @Column(length = 10, nullable = false)
     private String password;
 
+    private String profilePicturePath;
 
 
     @Column(length = 50, nullable = false)

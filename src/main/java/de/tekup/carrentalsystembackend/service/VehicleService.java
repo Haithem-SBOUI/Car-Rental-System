@@ -16,10 +16,12 @@ import de.tekup.carrentalsystembackend.repository.VehicleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
-import java.nio.file.AccessDeniedException;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,7 @@ public class VehicleService {
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final VehicleMapper vehicleMapper;
+    private final FileUploadService fileUploadService;
 
 
     public VehicleDto findVehicleById(Long id) {
@@ -45,12 +48,15 @@ public class VehicleService {
 
 
     public List<VehicleDto> findByFilters(LocalDate pickupDate, CarBrand brand, String model, Long maxPrice) {
+        if (model.isEmpty()) {
+            model = null;
+        }
         List<Vehicle> vehicleList = vehicleRepository.findByFilters(pickupDate, brand, model, maxPrice);
         return vehicleMapper.toDtoList(vehicleList);
 
     }
 
-    public void addVehicle(Long idUser, VehicleDto vehicleDto) throws AccessDeniedException {
+    public void addVehicle(Long idUser, VehicleDto vehicleDto) throws IOException {
 
         // Retrieve the user from the database
         User user = userRepository.findById(idUser)
@@ -61,15 +67,24 @@ public class VehicleService {
             // Create new vehicle instance from the dto
             Vehicle vehicle = convertDtoToInstance(vehicleDto);
             vehicle.setUser(user);
-//            vehicle.setUser(user);
+            if (vehicleDto.getPictures() != null && !vehicleDto.getPictures().isEmpty()) {
+                List<String> picturePaths = new ArrayList<>();
+                for (MultipartFile picture : vehicleDto.getPictures()) {
+                    String relativeImagePath = fileUploadService.uploadImage(picture, "vehicle");
+                    picturePaths.add(relativeImagePath);
+                }
+
+                vehicle.setPicturePaths(picturePaths);
+            } else {
+                vehicle.setPicturePaths(Collections.singletonList("uploads/vehicle_pictures/default_image.png"));
+            }
             vehicleRepository.save(vehicle);
 
             // Add the vehicle to the user's list of vehicles
 //            user.getVehicles().add(vehicle);
 //            userRepository.save(user);
         } else {
-            throw new AccessDeniedException("Your not Admin Role");
-
+            throw new UnauthorizedException("Your not Admin Role");
         }
 
 
@@ -218,4 +233,20 @@ public class VehicleService {
             throw new InternalServerErrorException("problem while delete Vehicle with id : " + id);
         }
     }
+
+    public List<Object[]> findNumberCarByBrand() {
+        CarBrand[] carBrands = CarBrand.values();
+        List<Object[]> chartData = new ArrayList<>();
+
+        for (CarBrand brand : carBrands) {
+            long quantity = vehicleRepository.countByBrand(brand);
+            String label = brand.toString(); // You can customize the label as needed
+
+            Object[] dataPoint = {label, quantity};
+            chartData.add(dataPoint);
+        }
+
+        return chartData;
+
+}
 }

@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -27,26 +29,14 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @PostMapping("/add-vehicle/{idUser}")
-    public ResponseEntity<?> addVehicle(@PathVariable Long idUser, @RequestBody VehicleDto vehicleDto) {
+    public ResponseEntity<?> addVehicle(@PathVariable Long idUser, @ModelAttribute VehicleDto vehicleDto) throws IOException {
+        vehicleService.addVehicle(idUser, vehicleDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                StringToJsonDto.builder()
+                        .message("Vehicle Created Successfully")
+                        .build()
+        );
 
-        try {
-            vehicleService.addVehicle(idUser, vehicleDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    StringToJsonDto.builder()
-                            .message("Vehicle Created Successfully")
-                            .build()
-            );
-        } catch (EntityNotFoundException e) {
-            // exception if the email or username already exists
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found!");
-
-       /* } catch (AccessDeniedException e) {
-
-            return ResponseEntity.status(403).body(e.getMessage());*/
-        } catch (Exception e) {
-            // any other exceptions
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Verify The User Data");
-        }
     }
 
 
@@ -54,12 +44,17 @@ public class VehicleController {
 
     @GetMapping("/filter-vehicle")
     public ResponseEntity<?> filterVehicle(
-            @RequestParam(required = false) LocalDate pickupDate,
+            @RequestParam(required = false) LocalDate pickupDate,//todo: fix still ignore the first Vehicle
             @RequestParam(required = false) CarBrand brand,
             @RequestParam(required = false) String model,
             @RequestParam(required = false) Long maxPrice) {
         List<VehicleDto> vehicleDtoList = vehicleService.findByFilters(pickupDate, brand, model, maxPrice);
         return ResponseEntity.ok(vehicleDtoList);
+    }
+
+    @GetMapping("/all-vehicle-brand")
+    public ResponseEntity<CarBrand[]> allVehicleBrand() {
+        return ResponseEntity.ok(CarBrand.values());
     }
 
 

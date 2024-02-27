@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -41,13 +44,9 @@ public class VehicleDto {
 
     private Boolean isAvailable;
 
-// todo: add create Dto from Model
+    private List<String> picturePaths;
 
-//    public record CarDTO(@NonNull String id, String make, String model) {
-//
-//        public static CarDTO fromModel(Car car) {
-//            return new CarDTO(car.id(), car.make(), car.model());
-//        }
-//    }
+    private List<MultipartFile> pictures;
+
 
 }

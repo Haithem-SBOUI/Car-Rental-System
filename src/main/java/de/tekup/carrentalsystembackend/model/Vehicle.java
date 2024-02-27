@@ -14,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -66,6 +67,11 @@ public class Vehicle implements Serializable {
 
     @Column(name = "last_maintenance_mileage")
     private int lastMaintenanceMileage;
+
+    @ElementCollection
+    @CollectionTable(name = "vehicle_pictures")
+    @Column(name = "picture_path")
+    private List<String> picturePaths;
 
 
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL)

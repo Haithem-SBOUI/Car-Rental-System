@@ -14,12 +14,18 @@ import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    @Query("SELECT c FROM Vehicle c JOIN c.reservations r " +
+
+
+    long countByBrand(CarBrand carBrand);
+
+    @Query("SELECT v FROM Vehicle v " +
+            "LEFT JOIN Reservation r ON v.id = r.vehicle.id " +
             "WHERE " +
+            "v.isAvailable AND " +
             "(:pickupDate IS NULL OR :pickupDate NOT BETWEEN r.pickupDate AND r.returnDate) AND " +
-            "(:brand IS NULL OR c.brand = :brand) AND " +
-            "(:model IS NULL OR c.model = :model) AND " +
-            "(:maxPrice IS NULL OR c.pricePerDay <= :maxPrice)")
+            "(:brand IS NULL OR v.brand = :brand) AND " +
+            "(:model IS NULL OR v.model = :model) AND " +
+            "(:maxPrice IS NULL OR v.pricePerDay <= :maxPrice)")
     List<Vehicle> findByFilters(
             @Param("pickupDate") LocalDate pickupDate,
             @Param("brand") CarBrand brand,

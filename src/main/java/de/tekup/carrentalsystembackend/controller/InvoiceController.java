@@ -2,9 +2,6 @@ package de.tekup.carrentalsystembackend.controller;
 
 
 import de.tekup.carrentalsystembackend.dto.InvoiceDto;
-import de.tekup.carrentalsystembackend.dto.modelMapper.InvoiceMapper;
-import de.tekup.carrentalsystembackend.model.Invoice;
-import de.tekup.carrentalsystembackend.repository.InvoiceRepository;
 import de.tekup.carrentalsystembackend.service.InvoiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InvoiceController {
     private final InvoiceService invoiceService;
-    private final InvoiceRepository invoiceRepository;
-    private final InvoiceMapper invoiceMapper;
 
 
     @GetMapping("/find-all-invoice")
@@ -64,7 +59,6 @@ public class InvoiceController {
         invoiceService.deleteInvoiceById(id);
         return ResponseEntity.noContent().build();
     }
-
 
 
 }
