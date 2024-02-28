@@ -4,6 +4,7 @@ import de.tekup.carrentalsystembackend.dto.AuthRequestDto;
 import de.tekup.carrentalsystembackend.dto.AuthResponseDto;
 import de.tekup.carrentalsystembackend.dto.RegisterDto;
 import de.tekup.carrentalsystembackend.model.User;
+import de.tekup.carrentalsystembackend.model.enums.UserRole;
 import de.tekup.carrentalsystembackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -51,6 +52,7 @@ public class UserService {
         }
 
         User user = convertDtoToUserEntity(newUser);
+        user.setRole(UserRole.ROLE_ADMIN);
         return userRepository.save(user);
     }
 

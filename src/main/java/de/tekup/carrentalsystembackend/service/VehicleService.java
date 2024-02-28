@@ -78,6 +78,7 @@ public class VehicleService {
             } else {
                 vehicle.setPicturePaths(Collections.singletonList("uploads/vehicle_pictures/default_image.png"));
             }
+            vehicle.setIsAvailable(true);
             vehicleRepository.save(vehicle);
 
             // Add the vehicle to the user's list of vehicles

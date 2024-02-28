@@ -17,15 +17,21 @@ import java.util.List;
 public class AnalysisController {
     private final AnalysisService analysisService;
 
-    @GetMapping("/find-number-car-by-brand")
+    @GetMapping("/count-number-car-by-brand")
     public ResponseEntity<?> findNumberCarByBrand() {
         return ResponseEntity.ok(analysisService.findNumberCarByBrand());
     }
 
 
-    @GetMapping("/chart-data")
-    public ResponseEntity<List<Object[]>> getChartData() {
-        List<Object[]> chartData = analysisService.getChartData();
+    @GetMapping("/count-by-pickup-month")
+    public ResponseEntity<List<Object[]>> countByPickupMonth() {
+        List<Object[]> chartData = analysisService.countByPickupMonth();
+        return ResponseEntity.ok(chartData);
+    }
+
+    @GetMapping("/count-by-created-on")
+    public ResponseEntity<List<Object[]>> countByCreatedOn() {
+        List<Object[]> chartData = analysisService.countByCreatedOn();
         return ResponseEntity.ok(chartData);
     }
 

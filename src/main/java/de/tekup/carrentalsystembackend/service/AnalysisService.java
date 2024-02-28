@@ -29,7 +29,7 @@ public class AnalysisService {
 
         for (CarBrand brand : carBrands) {
             long quantity = vehicleRepository.countByBrand(brand);
-            String label = brand.toString(); // You can customize the label as needed
+            String label = brand.toString();
 
             Object[] dataPoint = {label, quantity};
             chartData.add(dataPoint);
@@ -38,7 +38,10 @@ public class AnalysisService {
         return chartData;
     }
 
-    public List<Object[]> getChartData() {
-        return reservationRepository.getChartData();
+    public List<Object[]> countByPickupMonth() {
+        return reservationRepository.countByPickupMonth();
+    }
+    public List<Object[]> countByCreatedOn() {
+        return userRepository.countByCreatedOn();
     }
 }

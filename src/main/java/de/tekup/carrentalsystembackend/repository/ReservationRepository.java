@@ -16,7 +16,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 //List<Reservation> findAllByPickupDateIsLessThanEqualAndReturnDateGreaterThanEqual()
 
     @Query("SELECT MONTH(r.pickupDate), COUNT(r) FROM Reservation r GROUP BY MONTH(r.pickupDate)")
-    List<Object[]> getChartData();
+    List<Object[]> countByPickupMonth();
+
     Reservation findByIdAndStatus(Long id, ReservationStatusEnum status);
 
     boolean existsByIdAndStatus(Long id, ReservationStatusEnum status);

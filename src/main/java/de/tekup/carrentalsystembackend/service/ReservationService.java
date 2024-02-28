@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,11 +41,16 @@ public class ReservationService {
         userRepository.findById(reservationDto.getUser().getId())
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        vehicleRepository.findById(reservationDto.getVehicle().getId())
+        Vehicle vehicle = vehicleRepository.findById(reservationDto.getVehicle().getId())
                 .orElseThrow(() -> new NotFoundException("Vehicle not found"));
 
         Reservation reservation = reservationMapper.toEntity(reservationDto);
+        reservation.setStatus(ReservationStatusEnum.PENDING);
+        int numberOfDays = (int) ChronoUnit.DAYS.between(reservationDto.getPickupDate(), reservationDto.getReturnDate());
+        reservation.setNbDate(numberOfDays);
+        reservation.setTotalPrice(numberOfDays * vehicle.getPricePerDay());
         return reservationRepository.save(reservation);
+
 
     }
 

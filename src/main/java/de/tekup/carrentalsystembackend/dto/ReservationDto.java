@@ -12,7 +12,8 @@ import java.time.LocalDate;
 /**
  * DTO for {@link Reservation}
  */
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
